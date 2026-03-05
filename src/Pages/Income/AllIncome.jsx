@@ -1,23 +1,26 @@
 import { useState, useMemo } from 'react';
-import { Plus, Download, Calendar } from 'lucide-react';
+import { Plus, Download, Calendar, X } from 'lucide-react';
 import PageHeader from '../../Components/Ui/PageHeader';
 import SearchBar from '../../Components/Ui/SearchBar';
 import FilterBar from '../../Components/Ui/FilterBar';
 import Table from '../../Components/Ui/Table';
 import Pagination from '../../Components/Ui/Pagination';
 import Button from '../../Components/Ui/Button';
+import IncomeModal from '../../Components/Income/IncomeModal.jsx';
 
 const AllIncome = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingIncome, setEditingIncome] = useState(null);
   const [filters, setFilters] = useState({
     category: '',
     status: ''
   });
 
-  // Sample data
-  const incomeData = [
+  // Sample data with state management
+  const [incomeData, setIncomeData] = useState([
     { id: 1, source: 'Client Payment - ABC Corp', category: 'Services', amount: 5000, date: '2024-01-15', status: 'Received', paymentMethod: 'Bank Transfer' },
     { id: 2, source: 'Product Sales - XYZ Ltd', category: 'Sales', amount: 3200, date: '2024-01-12', status: 'Received', paymentMethod: 'Credit Card' },
     { id: 3, source: 'Consulting Fee - TechStart', category: 'Consulting', amount: 2500, date: '2024-01-10', status: 'Pending', paymentMethod: 'Invoice' },
@@ -48,19 +51,41 @@ const AllIncome = () => {
     { id: 28, source: 'Refund - Travel Expenses', category: 'Refund', amount: 450, date: '2024-02-07', status: 'Processed', paymentMethod: 'Credit Card' },
     { id: 29, source: 'Training Services - Corporate', category: 'Services', amount: 3700, date: '2024-02-08', status: 'Received', paymentMethod: 'Bank Transfer' },
     { id: 30, source: 'Product Sales - Accessories', category: 'Sales', amount: 670, date: '2024-02-09', status: 'Received', paymentMethod: 'Credit Card' },
-  ];
+  ]);
 
-  // Action handlers
-  const handleView = (row) => {
-    console.log('View row:', row);
+  // Handle Add Income
+  const handleAddIncome = (newIncome) => {
+    const newId = Math.max(...incomeData.map(item => item.id)) + 1;
+    setIncomeData([...incomeData, { ...newIncome, id: newId }]);
+    setIsModalOpen(false);
   };
 
-  const handleEdit = (row) => {
-    console.log('Edit row:', row);
+  // Handle Edit Income
+  const handleEditIncome = (updatedIncome) => {
+    setIncomeData(incomeData.map(item => 
+      item.id === updatedIncome.id ? updatedIncome : item
+    ));
+    setEditingIncome(null);
+    setIsModalOpen(false);
   };
 
-  const handleDelete = (row) => {
-    console.log('Delete row:', row);
+  // Handle Delete Income
+  const handleDeleteIncome = (row) => {
+    if (window.confirm('Are you sure you want to delete this income record?')) {
+      setIncomeData(incomeData.filter(item => item.id !== row.id));
+    }
+  };
+
+  // Open modal for adding
+  const openAddModal = () => {
+    setEditingIncome(null);
+    setIsModalOpen(true);
+  };
+
+  // Open modal for editing
+  const openEditModal = (row) => {
+    setEditingIncome(row);
+    setIsModalOpen(true);
   };
 
   // Table columns configuration
@@ -142,13 +167,13 @@ const AllIncome = () => {
       placeholder: 'All Categories',
       value: filters.category,
       options: [
-        { value: 'services', label: 'Services' },
-        { value: 'sales', label: 'Sales' },
-        { value: 'consulting', label: 'Consulting' },
-        { value: 'recurring', label: 'Recurring' },
-        { value: 'commission', label: 'Commission' },
-        { value: 'investment', label: 'Investment' },
-        { value: 'refund', label: 'Refund' }
+        { value: 'Services', label: 'Services' },
+        { value: 'Sales', label: 'Sales' },
+        { value: 'Consulting', label: 'Consulting' },
+        { value: 'Recurring', label: 'Recurring' },
+        { value: 'Commission', label: 'Commission' },
+        { value: 'Investment', label: 'Investment' },
+        { value: 'Refund', label: 'Refund' }
       ]
     },
     {
@@ -157,9 +182,9 @@ const AllIncome = () => {
       placeholder: 'All Status',
       value: filters.status,
       options: [
-        { value: 'received', label: 'Received' },
-        { value: 'pending', label: 'Pending' },
-        { value: 'processed', label: 'Processed' }
+        { value: 'Received', label: 'Received' },
+        { value: 'Pending', label: 'Pending' },
+        { value: 'Processed', label: 'Processed' }
       ]
     }
   ];
@@ -173,14 +198,14 @@ const AllIncome = () => {
         item.paymentMethod.toLowerCase().includes(searchQuery.toLowerCase());
 
       const matchesCategory = filters.category === '' || 
-        item.category.toLowerCase() === filters.category.toLowerCase();
+        item.category === filters.category;
 
       const matchesStatus = filters.status === '' || 
-        item.status.toLowerCase() === filters.status.toLowerCase();
+        item.status === filters.status;
 
       return matchesSearch && matchesCategory && matchesStatus;
     });
-  }, [searchQuery, filters]);
+  }, [searchQuery, filters, incomeData]);
 
   // Pagination calculations
   const totalPages = Math.ceil(filteredData.length / pageSize);
@@ -216,7 +241,7 @@ const AllIncome = () => {
       label: 'Add Income',
       icon: Plus,
       variant: 'primary',
-      onClick: () => console.log('Add income clicked')
+      onClick: openAddModal
     },
     {
       label: 'Export',
@@ -227,7 +252,7 @@ const AllIncome = () => {
   ];
 
   return (
-   <div className="w-full px-4">
+    <div className="w-full px-4">
       {/* Page Header */}
       <div className="mb-6">
         <PageHeader
@@ -315,9 +340,9 @@ const AllIncome = () => {
           <Table
             columns={columns}
             data={paginatedData}
-            onView={handleView}
-            onEdit={handleEdit}
-            onDelete={handleDelete}
+            onView={(row) => console.log('View row:', row)}
+            onEdit={openEditModal}
+            onDelete={handleDeleteIncome}
             showActions={true}
             onRowClick={(row) => console.log('Row clicked:', row)}
             emptyMessage="No income transactions found"
@@ -341,6 +366,18 @@ const AllIncome = () => {
           </div>
         )}
       </div>
+
+      {/* Income Modal */}
+      <IncomeModal
+        isOpen={isModalOpen}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingIncome(null);
+        }}
+        onSubmit={editingIncome ? handleEditIncome : handleAddIncome}
+        initialData={editingIncome}
+        title={editingIncome ? 'Edit Income' : 'Add New Income'}
+      />
     </div>
   );
 };
