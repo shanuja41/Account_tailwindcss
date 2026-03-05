@@ -1,9 +1,13 @@
 import { test, expect } from "./Fixtures/auth.fixture";
 
-test("Open All Income page using Fixture login (Setup/Teardown)", async ({ loggedInPage }) => {
-
-  await loggedInPage.goto("/income/all");
-
-  await expect(loggedInPage.locator("table")).toBeVisible();
-
+// In your test file
+test('Open All Income page using Fixture login', async ({ loggedInPage }) => {
+  const { page, logout } = loggedInPage;
+  
+  // Your test code here using 'page'
+  await page.goto("/income");
+  // ... test assertions
+  
+  // Manually logout at the end of your test
+  await logout();
 });

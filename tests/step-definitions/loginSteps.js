@@ -18,19 +18,11 @@ Given("the user is on the login page", async function () {
   });
 });
 
-// When("the user enters valid email and password", async function () {
-//   await page.getByTestId("login-email").fill("admin@example.com");
-//   await page.getByTestId("login-password").fill("password");
-// });
-
 When("the user enters valid email and password", async function () {
   await page.locator('input[name="email"]').fill("admin@example.com");
   await page.locator('input[name="password"]').fill("password");
 });
 
-// When("clicks the login button", async function () {
-//   await page.getByTestId("login-submit").click();
-// });
 When("clicks the login button", async function () {
   await page.locator('button[type="submit"]').click();
 });

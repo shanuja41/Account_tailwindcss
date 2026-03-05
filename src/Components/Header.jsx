@@ -192,6 +192,7 @@ const Header = ({ toggleSidebar, isSidebarOpen, darkMode, toggleDarkMode }) => {
           <div className="relative" ref={profileMenuRef}>
             <button
               onClick={() => setShowProfileMenu(!showProfileMenu)}
+              data-testid="profile-toggle"
               className="flex items-center gap-2 p-1.5 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors group"
               aria-label="Profile menu"
             >
@@ -211,7 +212,7 @@ const Header = ({ toggleSidebar, isSidebarOpen, darkMode, toggleDarkMode }) => {
 
             {/* Profile Dropdown */}
             {showProfileMenu && (
-              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-30">
+              <div className="absolute right-0 mt-2 w-56 bg-white dark:bg-gray-800 rounded-xl shadow-lg border border-gray-200 dark:border-gray-700 py-1 z-30"  >
                 <div className="px-4 py-3 border-b border-gray-200 dark:border-gray-700">
                   <p className="text-sm font-medium text-gray-900 dark:text-white">
                     {user?.name || 'John Doe'}
@@ -239,6 +240,7 @@ const Header = ({ toggleSidebar, isSidebarOpen, darkMode, toggleDarkMode }) => {
                 <div className="border-t border-gray-200 dark:border-gray-700 my-1" />
                 
                 <button 
+                 data-testid="logout-btn"
                   onClick={handleLogout}
                   className="w-full px-4 py-2.5 text-left text-sm text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/30 flex items-center gap-3 transition-colors"
                 >
