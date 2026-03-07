@@ -1,0 +1,53 @@
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - button "Toggle dark mode" [ref=e4]:
+    - img [ref=e5]
+  - generic [ref=e8]:
+    - generic [ref=e9]:
+      - generic [ref=e11]: A
+      - heading "AccountFlow" [level=1] [ref=e12]
+      - paragraph [ref=e13]: Welcome back! Please sign in to continue
+    - generic [ref=e14]:
+      - button "Sign In" [ref=e15]
+      - button "Sign Up" [ref=e16]
+    - generic [ref=e17]:
+      - img [ref=e18]
+      - generic [ref=e20]: Please fix the validation errors
+    - generic [ref=e21]:
+      - generic [ref=e22]:
+        - generic [ref=e23]: Email Address
+        - generic [ref=e24]:
+          - img [ref=e25]
+          - textbox "john@example.com" [ref=e28]: invalid-email
+        - paragraph [ref=e29]:
+          - img [ref=e30]
+          - text: Please enter a valid email address
+      - generic [ref=e34]:
+        - generic [ref=e35]: Password
+        - generic [ref=e36]:
+          - img [ref=e37]
+          - textbox "••••••••" [ref=e40]: pass
+          - button [ref=e41]:
+            - img [ref=e42]
+      - generic [ref=e45]:
+        - generic [ref=e46] [cursor=pointer]:
+          - checkbox "Remember me" [ref=e47]
+          - generic [ref=e48]: Remember me
+        - link "Forgot password?" [ref=e49] [cursor=pointer]:
+          - /url: "#"
+      - button "Sign In" [active] [ref=e50]:
+        - img [ref=e51]
+        - generic [ref=e54]: Sign In
+    - generic [ref=e55]:
+      - paragraph [ref=e56]: "Demo Credentials:"
+      - generic [ref=e57]:
+        - paragraph [ref=e58]:
+          - img [ref=e59]
+          - generic [ref=e62]: "Email: admin@example.com"
+        - paragraph [ref=e63]:
+          - img [ref=e64]
+          - generic [ref=e67]: "Password: password"
+    - paragraph [ref=e68]: © 2026 AccountFlow. All rights reserved.
+```
